@@ -30,9 +30,7 @@ import org.eclipse.core.runtime.CoreException;
  */
 public class DeltaVisitor implements IResourceDeltaVisitor
 {
-   public static final String MARKER_TYPE = "JBindPluginEclipse.JBindPluginEclipseError";
-
-   int                        countSrc    = 0;
+   int countSrc = 0;
 
    @Override
    public boolean visit(IResourceDelta delta) throws CoreException

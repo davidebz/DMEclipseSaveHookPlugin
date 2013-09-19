@@ -38,6 +38,7 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
@@ -61,7 +62,7 @@ public class DMEclipseSaveHookPluginBuilder extends IncrementalProjectBuilder
 
       try
       {
-         System.out.println("JBindPluginEclipse " + new Date().toString());
+         System.out.println("DMEclipseSaveHookPlugin " + new Date().toString());
          if (this.getProject().hasNature(JavaCore.NATURE_ID))
          {
             IJavaProject javaProject = JavaCore.create(this.getProject());
@@ -203,7 +204,18 @@ public class DMEclipseSaveHookPluginBuilder extends IncrementalProjectBuilder
          }
          if (cp.getEntryKind() == IClasspathEntry.CPE_LIBRARY)
          {
-            fullClasspath.add(cp.getPath().toOSString());
+            IPath path = cp.getPath();
+            // Check first if this path is relative to workspace
+            IResource workspaceMember = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
+            if (workspaceMember != null)
+            {
+               String fullPath = workspaceMember.getLocation().toOSString();
+               fullClasspath.add(fullPath);
+            }
+            else
+            {
+               fullClasspath.add(path.toOSString());
+            }
          }
       }
    }
